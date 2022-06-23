@@ -16,7 +16,7 @@ export default function Navbar(props) {
       <Logo path={'/'}/>
 
       <div className="search">
-        <FilterInput inputValue={props.filterInputValue} handleOnChange={handleOnInputChange}/>
+        <FilterInput inputValue={props.filterInputValue} handleOnChange={handleOnInputChange} />
       </div>
 
       <div className="user">
@@ -36,11 +36,8 @@ export default function Navbar(props) {
   )
 }
 
-export function Logo() {
+export function Logo({path}) {
   return (
-    <a className="logo">
-      <Link to="/"><img src={codepath} alt="logo" /></Link>
-      
-    </a>
+      <Link className="logo" to={path}><img src={codepath} alt="logo" /></Link>
   )
 }

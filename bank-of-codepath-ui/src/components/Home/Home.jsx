@@ -1,33 +1,69 @@
 import * as React from "react"
+import { useEffect } from 'react';
+import axios from 'axios'
 import AddTransaction from "../AddTransaction/AddTransaction"
 import BankActivity from "../BankActivity/BankActivity"
 import "./Home.css"
-import axios from 'axios'
-
-import { useEffect} from 'react';
 
 export default function Home(props) {
 
-  //console.log(props)
+  const filteredTransactions = props.transactions?.filter((transaction) => {
+    return (props.filterInputValue.length ? transaction.description?.toLowerCase()
+      .includes(props.filterInputValue.toLowerCase()) : props.transactions)
+  })
+
+  const handleOnSubmitNewTransaction = (event) => {
+    return;
+  }
+
+  const handleOnCreateTransaction = async() => {
+    props.setIsCreating(true)
+    await axios.post("http://localhost:3001/bank/transactions", {transaction: props.newTransactionForm})
+    .catch((err) => {
+      props.setError(err)
+      props.setIsCreating(false)
+    })
+    .then(res => {
+      props.setTransactions((prevTransactions) => [...prevTransactions, res?.data?.transaction])
+    })
+    .finally(() => {
+      props.setNewTransactionForm({
+        category: "",
+        description: "",
+        amount: 0
+      })
+      props.setIsCreating(false)
+    })
+  }
 
   useEffect(async () => {
 
     props.setIsLoading(true)
     
       try {
-        const transactionData = await axios.get('http://localhost:3001/bank/transactions');
-        console.log(transactionData)
-        //props.setTransactions(response.data.transactionData)
+        const transactionResponse = await axios.get('http://localhost:3001/bank/transactions');
+        props.setTransactions(transactionResponse.data.transactions)
+
+        const transferResponse = await axios.get('http://localhost:3001/bank/transfers');
+        props.setTransfers(transferResponse.data.transfers)
       } catch (error) {
-        console.log(error)
-        // setError("Error fetching products.")
-        // setIsFetching(false)
+        props.setError(error)
       }
-  });
+
+      props.setIsLoading(false)
+  }, []);
+
   return (
     <div className="home">
-      <AddTransaction />
-      <BankActivity />
+      <AddTransaction       
+      isCreating={props.isCreating}
+      setIsCreating={props.setIsCreating} 
+      form={props.newTransactionForm}
+      setForm={props.setNewTransactionForm}
+      handleOnSubmit={handleOnCreateTransaction}/>
+      {props.isLoading ? <h1>Loading...</h1> : 
+      <BankActivity transfers={props.transfers} transactions={filteredTransactions}/>}
+      {props.error ? <h2 className="error"> {props.error} </h2>: null}
     </div>
   )
 }
