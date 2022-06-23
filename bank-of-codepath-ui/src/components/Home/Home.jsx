@@ -17,21 +17,28 @@ export default function Home(props) {
   }
 
   const handleOnCreateTransaction = async() => {
+
     props.setIsCreating(true)
+
     await axios.post("http://localhost:3001/bank/transactions", {transaction: props.newTransactionForm})
-    .catch((err) => {
-      props.setError(err)
+
+    .catch((error) => {
+
+      props.setError(error)
       props.setIsCreating(false)
     })
     .then(res => {
+
       props.setTransactions((prevTransactions) => [...prevTransactions, res?.data?.transaction])
     })
     .finally(() => {
+
       props.setNewTransactionForm({
         category: "",
         description: "",
         amount: 0
       })
+      
       props.setIsCreating(false)
     })
   }
@@ -52,6 +59,7 @@ export default function Home(props) {
 
       props.setIsLoading(false)
   }, []);
+  
 
   return (
     <div className="home">

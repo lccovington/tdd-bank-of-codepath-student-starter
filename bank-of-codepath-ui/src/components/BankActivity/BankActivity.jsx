@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { formatDate, formatAmount } from "../../utils/format"
 import "./BankActivity.css"
 
+
 export default function BankActivity(props) {
   return (
     <div className="bank-activity">
@@ -14,10 +15,8 @@ export default function BankActivity(props) {
           <span className="col x2">Amount</span>
           <span className="col x15">Date</span>
         </div>
-        <div className="transaction-row">
-        </div>
-        {props.transactions?.map((t) => (
-          <TransactionRow transaction={t} key={t.id}/>
+        {props.transactions?.map((transaction) => (
+          <TransactionRow transaction={transaction} key={transaction.id}/>
         ))}
       </div>
 
@@ -29,25 +28,25 @@ export default function BankActivity(props) {
           <span className="col x2">Amount</span>
           <span className="col x15">Date</span>
         </div>
-        {props.transfers?.map((t) => (
-          <TransferRow transfer={t} key={t.id}/>
+        {props.transfers?.map((transfer) => (
+          <TransferRow transfer={transfer} key={transfer.id}/>
         ))}
       </div>
     </div>
   )
 }
 
-export function TransactionRow({ transaction = {} }) {
+export function TransactionRow({ transaction = {}}) {
   return (
-    <Link className="table-row transaction-row" to={`/transactions/${transaction.id}`}>
-      <span className="col x4">
-        <Arrow amount={transaction.amount} />
-        {transaction.description}
-      </span>
-      <span className="col x2">{transaction.category}</span>
-      <span className="col x2">{formatAmount(transaction.amount)}</span>
-      <span className="col x15">{formatDate(transaction.postedAt)}</span>
-    </Link>
+        <Link className="table-row transaction-row" to={`/transactions/${transaction.id}`}>
+          <span className="col x4">
+            <Arrow amount={transaction.amount} />
+            {transaction.description}
+          </span>
+          <span className="col x2">{transaction.category}</span>
+          <span className="col x2">{formatAmount(transaction.amount)}</span>
+          <span className="col x15">{formatDate(transaction.postedAt)}</span>
+        </Link>
   )
 }
 

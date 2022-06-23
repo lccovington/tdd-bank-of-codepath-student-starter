@@ -31,7 +31,8 @@ export default function App() {
           <Routes>
 
             <Route path="/" 
-            element={<Home 
+            element={
+            <Home 
             transactions={transactions} 
             setTransactions={setTransactions}
             transfers={transfers}

@@ -5,18 +5,21 @@ import axios from 'axios'
 import { formatAmount, formatDate } from "../../utils/format"
 import "./TransactionDetail.css"
 
+
 export default function TransactionDetail() {
 
-  const [hasFetched, setHasFetched] = React.useState(false)
-  const [transaction, setTransaction] = React.useState({})
-  const [isLoading, setIsLoading] = React.useState(false)
-  const [error, setError] = React.useState('')
+  const [hasFetched, setHasFetched] = useState(false)
+  const [transaction, setTransaction] = useState({})
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  const {transactionId} = useParams()
+  const { transactionId } = useParams()
 
   useEffect(() => {
     const fetchTransactionById = async () => {
+
       setIsLoading(true)
+
       if(!transactionId) {
         return;
       }
@@ -27,28 +30,17 @@ export default function TransactionDetail() {
         }
       } catch (err) {
         setError(err)
-      } finally {
-        setIsLoading(false)
-        setHasFetched(true)
       }
+
+      setIsLoading(false)
+      setHasFetched(true)
+
     }
-    fetchTransactionById()
-  }, [transactionId]);
-
-  // useEffect(async () => {
     
-  //     try {
-  //       const transactionResponse = await axios.get(`http://localhost:3001/bank/transactions/${transactionId}`);
-  //       setTransaction(transactionResponse.data.transaction)
-        
-  //     } catch (error) {
-        
-  //     }
-      
-  // }, [transaction]);
+    fetchTransactionById();
 
-  
-  //console.log(transaction)
+  }, [transactionId])
+
   return (
     <div className="transaction-detail">
       <TransactionCard transaction={transaction} transactionId={transactionId} hasFetched={hasFetched}/>
@@ -56,13 +48,13 @@ export default function TransactionDetail() {
   )
 }
 
-export function TransactionCard({ transaction = {}, transactionId = null, hasFetched }) {
-  //console.log(transaction)
+export function TransactionCard({ transaction = {}, transactionId = null, hasFetched}) {
+  
   return (
     <div className="transaction-card card">
       <div className="card-header">
         <h3>Transaction #{transactionId}</h3>
-        {Object.keys(transaction).length === 0 && hasFetched  === true ? <h1>Not Found</h1> : null}
+        {Object.keys(transaction).length == 0 && hasFetched == true ? <h1>Not Found</h1> : null}
         <p className="category">{transaction.category}</p>
       </div>
 
